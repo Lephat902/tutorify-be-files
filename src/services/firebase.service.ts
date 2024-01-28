@@ -10,7 +10,7 @@ export class FirebaseService {
   constructor() {
     admin.initializeApp({
       credential: admin.credential.cert(
-        'src/configs/tutorify-b63bf-firebase-adminsdk-yvkwv-a4ec247bb0.json',
+        'tutorify-b63bf-firebase-adminsdk-yvkwv-a4ec247bb0.json',
       ),
       storageBucket: firebaseConfig.storageBucket,
     });
