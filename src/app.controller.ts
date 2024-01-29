@@ -1,13 +1,14 @@
 import {
-  BadRequestException,
   Controller,
+  MaxFileSizeValidator,
+  ParseFilePipe,
   Post,
-  Req,
+  UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiConsumes,
   ApiBody,
@@ -15,13 +16,16 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import { FilesUploadDto } from './dtos/files-upload.dto';
-import { fileOptions } from './configs';
+import { AvatarUploadDto } from './dtos/avatar-upload.dto';
+import { CustomFileTypeValidator } from './validators/custom-file-type.validator';
+import { AvatarRatioValidator } from './validators/avatar-ratio.validator';
+import { AvatarTypeValidator } from './validators/avatar-type.validator';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @UseInterceptors(FilesInterceptor('files', 100, fileOptions))
+  @UseInterceptors(FilesInterceptor('files'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Files to upload',
@@ -36,21 +40,51 @@ export class AppController {
   })
   @Post('upload/files')
   uploadFiles(
-    @Req()
-    req: any,
-    @UploadedFiles()
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 1024 * 1024 * 20,
+            message: 'Maximum file size is 20MB',
+          }),
+          new CustomFileTypeValidator(),
+        ],
+      }),
+    )
     files: Array<Express.Multer.File>,
   ) {
-    if (files.length === 0) {
-      return new BadRequestException('Files are required!');
-    }
-
-    const error = req.fileValidationError;
-
-    if (error) {
-      return new BadRequestException(error);
-    }
-
     return this.appService.uploadFiles(files);
+  }
+
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Avatar to upload',
+    type: AvatarUploadDto,
+  })
+  @ApiCreatedResponse({
+    description: 'The avatar has been uploaded successfully.',
+  })
+  @ApiBadRequestResponse({
+    description:
+      'File format is invalid or file size is too large or file is required.',
+  })
+  @Post('upload/avatar')
+  uploadAvatar(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 1024 * 1024,
+            message: 'Maximum image size is 1MB.',
+          }),
+          new AvatarTypeValidator(),
+          new AvatarRatioValidator(),
+        ],
+      }),
+    )
+    avatar: Express.Multer.File,
+  ) {
+    return this.appService.uploadFile(avatar);
   }
 }

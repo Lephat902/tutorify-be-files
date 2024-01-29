@@ -7,4 +7,8 @@ export class AppService {
   uploadFiles(files: Array<Express.Multer.File>) {
     return this.firebaseService.uploadFiles(files);
   }
+
+  uploadFile(file: Express.Multer.File) {
+    return this.firebaseService.uploadFile(file);
+  }
 }
