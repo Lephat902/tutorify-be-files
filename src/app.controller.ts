@@ -1,6 +1,8 @@
 import {
   Controller,
+  Get,
   MaxFileSizeValidator,
+  Param,
   ParseFilePipe,
   Post,
   UploadedFile,
@@ -14,6 +16,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiBadRequestResponse,
+  ApiOkResponse,
 } from '@nestjs/swagger';
 import { FilesUploadDto } from './dtos/files-upload.dto';
 import { AvatarUploadDto } from './dtos/avatar-upload.dto';
@@ -38,8 +41,9 @@ export class AppController {
     description:
       'File formats are invalid or file sizes are too large or file is required.',
   })
-  @Post('upload/files')
-  uploadFiles(
+  @Post('tutors/:id/upload/portfolio')
+  uploadTutorFiles(
+    @Param('id') tutorId: string,
     @UploadedFiles(
       new ParseFilePipe({
         validators: [
@@ -53,7 +57,7 @@ export class AppController {
     )
     files: Array<Express.Multer.File>,
   ) {
-    return this.appService.uploadFiles(files);
+    return this.appService.createPortfolios(tutorId, files);
   }
 
   @UseInterceptors(FileInterceptor('avatar'))
@@ -86,5 +90,53 @@ export class AppController {
     avatar: Express.Multer.File,
   ) {
     return this.appService.uploadFile(avatar);
+  }
+
+  @UseInterceptors(FilesInterceptor('files'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Files to upload',
+    type: FilesUploadDto,
+  })
+  @ApiCreatedResponse({
+    description: 'The files have been uploaded successfully.',
+  })
+  @ApiBadRequestResponse({
+    description:
+      'File formats are invalid or file sizes are too large or file is required.',
+  })
+  @Post('sessions/:id/upload/materials')
+  uploadSesssionFiles(
+    @Param('id') sessionId: string,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 1024 * 1024 * 20,
+            message: 'Maximum file size is 20MB',
+          }),
+          new CustomFileTypeValidator(),
+        ],
+      }),
+    )
+    files: Array<Express.Multer.File>,
+  ) {
+    return this.appService.createSessionMaterials(sessionId, files);
+  }
+
+  @ApiOkResponse({
+    description: 'Get all portfolios by tutorId  successfully.',
+  })
+  @Get('tutors/:id/portfolios')
+  getAllPortfoliosByUserId(@Param('id') tutorId: string) {
+    return this.appService.getAllPortfoliosByTutorId(tutorId);
+  }
+
+  @ApiOkResponse({
+    description: 'Get all materials by sessionId successfully.',
+  })
+  @Get('sessions/:id/materials')
+  getAllSessionMaterialBySessionId(@Param('id') sessionId: string) {
+    return this.appService.getAllSessionMaterialBySessionId(sessionId);
   }
 }
