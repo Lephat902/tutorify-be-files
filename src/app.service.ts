@@ -13,7 +13,7 @@ export class AppService {
     @InjectRepository(SessionMaterialEntity)
     private readonly sessionMaterialRepository: Repository<SessionMaterialEntity>,
     private readonly firebaseService: FirebaseService,
-  ) {}
+  ) { }
 
   async createPortfolios(tutorId: string, files: Array<Express.Multer.File>) {
     const fileUrls = await Promise.all(this.firebaseService.uploadFiles(files));

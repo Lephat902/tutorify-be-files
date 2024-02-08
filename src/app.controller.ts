@@ -11,36 +11,15 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import {
-  ApiConsumes,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiBadRequestResponse,
-  ApiOkResponse,
-} from '@nestjs/swagger';
-import { FilesUploadDto } from './dtos/files-upload.dto';
-import { AvatarUploadDto } from './dtos/avatar-upload.dto';
 import { CustomFileTypeValidator } from './validators/custom-file-type.validator';
 import { AvatarRatioValidator } from './validators/avatar-ratio.validator';
 import { AvatarTypeValidator } from './validators/avatar-type.validator';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
   @UseInterceptors(FilesInterceptor('files'))
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    description: 'Files to upload',
-    type: FilesUploadDto,
-  })
-  @ApiCreatedResponse({
-    description: 'The files have been uploaded successfully.',
-  })
-  @ApiBadRequestResponse({
-    description:
-      'File formats are invalid or file sizes are too large or file is required.',
-  })
   @Post('tutors/:id/upload/portfolio')
   uploadTutorFiles(
     @Param('id') tutorId: string,
@@ -61,18 +40,6 @@ export class AppController {
   }
 
   @UseInterceptors(FileInterceptor('avatar'))
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    description: 'Avatar to upload',
-    type: AvatarUploadDto,
-  })
-  @ApiCreatedResponse({
-    description: 'The avatar has been uploaded successfully.',
-  })
-  @ApiBadRequestResponse({
-    description:
-      'File format is invalid or file size is too large or file is required.',
-  })
   @Post('upload/avatar')
   uploadAvatar(
     @UploadedFile(
@@ -93,18 +60,6 @@ export class AppController {
   }
 
   @UseInterceptors(FilesInterceptor('files'))
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    description: 'Files to upload',
-    type: FilesUploadDto,
-  })
-  @ApiCreatedResponse({
-    description: 'The files have been uploaded successfully.',
-  })
-  @ApiBadRequestResponse({
-    description:
-      'File formats are invalid or file sizes are too large or file is required.',
-  })
   @Post('sessions/:id/upload/materials')
   uploadSesssionFiles(
     @Param('id') sessionId: string,
@@ -124,17 +79,11 @@ export class AppController {
     return this.appService.createSessionMaterials(sessionId, files);
   }
 
-  @ApiOkResponse({
-    description: 'Get all portfolios by tutorId  successfully.',
-  })
   @Get('tutors/:id/portfolios')
   getAllPortfoliosByUserId(@Param('id') tutorId: string) {
     return this.appService.getAllPortfoliosByTutorId(tutorId);
   }
 
-  @ApiOkResponse({
-    description: 'Get all materials by sessionId successfully.',
-  })
   @Get('sessions/:id/materials')
   getAllSessionMaterialBySessionId(@Param('id') sessionId: string) {
     return this.appService.getAllSessionMaterialBySessionId(sessionId);
