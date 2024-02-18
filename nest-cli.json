@@ -3,6 +3,12 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "assets": [
+      {
+        "include": "./tutorify-b63bf-firebase-adminsdk-yvkwv-a4ec247bb0.json",
+        "outDir": "./dist"
+      }
+    ]
   }
 }

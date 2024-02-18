@@ -4,6 +4,8 @@ import { Bucket } from '@google-cloud/storage';
 import { firebaseConfig } from '../configs';
 import { v4 as uuidv4 } from 'uuid';
 import { IUploadedFile } from '../interfaces';
+import * as FirebaseJSON from '../tutorify-b63bf-firebase-adminsdk-yvkwv-a4ec247bb0.json';
+
 @Injectable()
 export class FirebaseService {
   private readonly storage: Bucket;
@@ -11,7 +13,7 @@ export class FirebaseService {
   constructor() {
     admin.initializeApp({
       credential: admin.credential.cert(
-        'tutorify-b63bf-firebase-adminsdk-yvkwv-a4ec247bb0.json',
+        FirebaseJSON as admin.ServiceAccount
       ),
       storageBucket: firebaseConfig.storageBucket,
     });
