@@ -1,15 +1,26 @@
 import { NestFactory } from '@nestjs/core';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
+import { GlobalExceptionsFilter } from './global-exception-filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: [process.env.RABBITMQ_URI],
+        queue: 'file',
+        queueOptions: {
+          durable: false,
+        },
+      },
+    },
+  );
 
-  // Get ConfigService instance
-  const configService = app.get(ConfigService);
+  // Use the global exception filter
+  app.useGlobalFilters(new GlobalExceptionsFilter());
 
-  // Start the application and listen on the specified port
-  await app.listen(configService.get<number>('PORT'));
+  await app.listen();
 }
-
 bootstrap();
