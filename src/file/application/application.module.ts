@@ -5,8 +5,8 @@ import { InfrastructureModule } from '../infrastructure/infrastruture.module';
 import { FirebaseService } from './services/firebase.service';
 
 @Module({
-  imports: [InfrastructureModule, ],
+  imports: [InfrastructureModule,],
   controllers: [FileController],
-  providers: [ FirebaseService, FileService],
+  providers: [FirebaseService, FileService],
 })
-export class ApplicationModule {}
+export class ApplicationModule { }

@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
- FileUploadSchema,
- FileUpload
+  FileUploadSchema,
+  FileUpload
 } from './schemas';
 import { ConfigService } from '@nestjs/config';
 
@@ -21,10 +21,9 @@ import { ConfigService } from '@nestjs/config';
         name: FileUpload.name,
         schema: FileUploadSchema,
       },
-
     ]),
   ],
   providers: [MongooseModule, FileUpload],
   exports: [MongooseModule, FileUpload],
 })
-export class InfrastructureModule {}
+export class InfrastructureModule { }

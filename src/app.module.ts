@@ -10,7 +10,7 @@ import { FileModule } from './file/file.module';
     FileModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env'],
+      envFilePath: ['.env.example', '.env'],
     }),
   ],
   controllers: [FileController],
