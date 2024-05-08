@@ -35,7 +35,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Enviroment
-.env
+.env*
 
 # API keys
 tutorify-b63bf-firebase-adminsdk-yvkwv-a4ec247bb0.json
