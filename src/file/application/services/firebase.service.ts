@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose';
 import { FileUpload } from 'src/file/infrastructure/schemas';
-import * as FirebaseJSON from 'src/tutorify-b63bf-firebase-adminsdk-yvkwv-a4ec247bb0.json'
+import * as FirebaseJSON from 'src/service-account-key.json'
 
 @Injectable()
 export class FirebaseService {

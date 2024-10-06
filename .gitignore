@@ -38,4 +38,4 @@ lerna-debug.log*
 .env*
 
 # API keys
-tutorify-b63bf-firebase-adminsdk-yvkwv-a4ec247bb0.json
+service-account-key.json

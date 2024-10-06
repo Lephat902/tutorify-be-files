@@ -6,7 +6,7 @@
     "deleteOutDir": true,
     "assets": [
       {
-        "include": "./tutorify-b63bf-firebase-adminsdk-yvkwv-a4ec247bb0.json",
+        "include": "./service-account-key.json",
         "outDir": "./dist"
       }
     ]
